@@ -23,3 +23,19 @@ using System.Linq;
 // System.Console.WriteLine(Array.FindIndex(meas,i => i == 55)); //Ищет индекс, если нет, то -1
 // Array.Reverse(meas); //Разворачивает массив
 
+int[] box = new int[]{4,5,3,6,8,3,2};
+System.Console.WriteLine(box[^1]); // ^1 получить 1-ый с конца элемент
+int[] box_under = box[1..4]; //срез массива(последний не попадает) [..5] -от начала [5..] - до конца
+System.Console.WriteLine(box_under[0]);
+
+Index myIndex = ^2; //Индекс, это тип данных
+Index myIndex_1 = new Index(4,true); //  == ^4
+System.Console.WriteLine($"value index - {myIndex.Value}, isFromEnd - {myIndex.IsFromEnd}");
+
+Range myRange = 1..4;
+myRange = ^4..^1;
+Range myRange_1 = new Range(1,4); // ==  1..4(конец не входит), 1 и 4 это ИНДЕКСЫ(тип данных)
+int[] myBox = box[myRange];
+
+string msg = "Helllo wwworllld!!!";
+System.Console.WriteLine(msg[3..9]);
