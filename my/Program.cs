@@ -1,28 +1,28 @@
 ﻿using System;
 
+int[][] array = new int[5][];
 
-
-int[,] array_2D = new int[10,6];
+array[0] = new int[8];
+array[1] = new int[3];
+array[2] = new int[6];
+array[3] = new int[2];
+array[4] = new int[9];
 
 Random random = new Random();
 
-int height = array_2D.GetLength(0);
-int width = array_2D.GetLength(1);
-
-for (int x = 0; x < height; x++)
+for (int i = 0; i < array.Length; i++)
 {
-    for (int y = 0; y < width; y++)
+    for (int k = 0; k < array[i].Length; k++)
     {
-        array_2D[x,y] = random.Next(100);
+        array[i][k] = random.Next(100);
     }
 }
 
-for (int x = 0; x < height; x++)
+for (int i = 0; i < array.Length; i++)
 {
-    for (int y = 0; y < width; y++)
+    for (int k = 0; k < array[i].Length; k++)
     {
-        System.Console.Write(array_2D[x,y] + " ");
+        System.Console.Write(array[i][k] + "\t");
     }
     System.Console.WriteLine();
 }
-
