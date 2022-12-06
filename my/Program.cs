@@ -209,10 +209,12 @@ class Program
         }
         interFace(folder_enemy, folder_y, folder_x,folder_play);
     }
-    static Tuple<int[][][], int[,], string[]> LaunchCores(int[] cores_count,int[][][] cores_array,
-                            int cores_sum,int[,] folder, string[] cores_orient,
+    static Tuple<int[][][], int[,], string[]> LaunchCores(int[][][] cores_array,
+                            int[,] folder, string[] cores_orient,
                             int[] folder_x, string folder_y, int[,] folder_enemy, int player)
     {
+        int[] cores_count = {1,2,3,4};
+        int cores_sum = 0;
         while(true)
         {
             System.Console.WriteLine("Если по горизонтали (1) то сначала Строка потом Столбец");
@@ -308,7 +310,7 @@ class Program
                     break;
                 }
             }
-            if (cores_sum == 10) break;
+            if (cores_sum == 2) break;
         }
         var res = Tuple.Create(cores_array, folder, cores_orient);
         return res;
@@ -404,12 +406,14 @@ class Program
         string folder_y = "ABCDEFGHIJ";
         int[] folder_x = new int[10]{1,2,3,4,5,6,7,8,9,10};
 
-        int[] cores_count = {1,2,3,4};
-        string[] cores_orient = new string[10];
-        int[][][] cores_array = new int[10][][];  //[корабль][количество координат][сами координаты(их там 2(Y,X))]
-        int[][] logs = new int[10000][];
+         //переместить в инициализатор
 
-        int cores_sum = 0;
+        string[] cores_orient_p1 = new string[2]; 
+        int[][][] cores_array_p1 = new int[2][][];  //[корабль][количество координат][сами координаты(их там 2(Y,X))]
+                                              
+        string[] cores_orient_p2 = new string[2];   //Числа в них - ограничитель, также cores_sum - ограничитель
+        int[][][] cores_array_p2 = new int[2][][];  //[корабль][количество координат][сами координаты(их там 2(Y,X))]
+
         int player = 1;
         int launch = 0;
 
@@ -419,25 +423,45 @@ class Program
             int[,] P1 = player_b ? folder1 : folder2;
             int[,] P2 = player_b ? folder2 : folder1;
 
+            int[][][] cores_array_player = player_b ? cores_array_p1 : cores_array_p2;
+            string[] cores_orient_player = player_b ? cores_orient_p1 : cores_orient_p2;
+
             if(launch < 2)
             {
                 interFace(P1,folder_y,folder_x,P2,player);
-                var trew = LaunchCores(cores_count, cores_array, cores_sum, P1, cores_orient, folder_x, folder_y,P2,player);
+                var trew = LaunchCores(new int[2][][],P1,new string[2],folder_x,folder_y,P2,player); //Ограничитель
 
-               cores_array = trew.Item1;
+                if(launch < 1)
+                {
+                    cores_array_p1 = trew.Item1;
+                    cores_orient_p1 = trew.Item3;
+                }
+                else
+                {
+                    cores_array_p2 = trew.Item1;
+                    cores_orient_p2 = trew.Item3;
+                }
+
                 P1 = trew.Item2;
-                cores_orient = trew.Item3;
 
                 launch++;
                 player = player == 1 ? 2 : 1;
+                for (int i = 0; i < cores_array_p1.Length; i++)
+                {
+                    System.Console.WriteLine(cores_array_p1[i][0][0] + " " + cores_array_p1[i][0][1] + " " + cores_array_p1[i]);
+                    try
+                    {
+                        System.Console.WriteLine(cores_array_p2[i][0][0] + " " + cores_array_p2[i][0][1] + " " + cores_orient_p2[i]);
+                    }
+                    catch (System.NullReferenceException)
+                    {}
+                }
                 continue;
             }
 
-            P1 = AnotherPlayer(P1, cores_array, cores_orient, folder_x, folder_y,P2);
+            P1 = AnotherPlayer(P1, cores_array_player, cores_orient_player, folder_x, folder_y,P2);
             player = player == 1 ? 2 : 1;
             continue;
         }
-
-        
     }
 }
