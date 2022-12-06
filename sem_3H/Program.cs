@@ -47,8 +47,63 @@ while(true)
         AllCoords[i] = conv_cords;
     }
     double res = Distance(AllCoords);
-    System.Console.WriteLine("Расстояние - " + res + "Продолжим? (след. задание - q) ");
+    System.Console.WriteLine("Расстояние - " + res + "\nПродолжим? (след. задание - q) ");
     string msg = Console.ReadLine();
     if (msg == "q")break;
 }
 
+System.Console.WriteLine("Задача 23");
+while (true)
+{
+    System.Console.WriteLine("Ввёдите число: ");
+    double value = Convert.ToDouble(Console.ReadLine());
+    for (int i = 0; i < value; i++)
+    {
+        System.Console.Write(Convert.ToInt32(Math.Pow((i+1),3)));
+        if(i < value-1) System.Console.Write(", ");
+        else System.Console.WriteLine();
+    }
+    System.Console.WriteLine("Продолжим? (след. задание - q) ");
+    string msg = Console.ReadLine();
+    if (msg == "q")break;
+}
+
+System.Console.WriteLine("Задача 19");
+while(true)
+{
+    System.Console.WriteLine("Введите число: ");
+    long val = long.Parse(Console.ReadLine());
+    string val_string = val.ToString();
+    char[] val_array_chars = val_string.ToCharArray();
+
+    Array.Reverse(val_array_chars);
+    val_string = new String(val_array_chars);
+    val = Convert.ToInt64(val_string);
+
+    System.Console.WriteLine(val);
+
+    System.Console.WriteLine("Продолжим? (след. задание - q) ");
+    string msg = Console.ReadLine();
+    if (msg == "q")break;
+}
+
+System.Console.WriteLine("Доп. Задание");
+while(true)
+{
+    System.Console.Write("Введите число: ");
+    string msg = Console.ReadLine();
+    string[] msg_array = msg.Split(new char[]{' '},StringSplitOptions.RemoveEmptyEntries);
+
+    for (int i = msg_array.Length - 1, count = 0; i > msg_array.Length / 2 - 1; i--, count++)
+    {
+        string bofer = msg_array[count];
+        msg_array[count] = msg_array[i];
+        msg_array[i] = bofer;
+    }
+
+    System.Console.WriteLine();
+    for (int i = 0; i < msg_array.Length; i++)
+    {
+        System.Console.Write(msg_array[i] + " ");
+    }
+}
