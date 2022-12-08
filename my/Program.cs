@@ -39,9 +39,12 @@ class Program
             System.Console.WriteLine();
         }
     }
-    static void interFace(int [,] folder1, string folder_y, int[] folder_x, string[,] folder2)
+    static void interFace(int [,] folder1, string folder_y, int[] folder_x, string[,] folder2, int player)
     {
-        System.Console.WriteLine("\tPlayer 1\t\t\t\t\tPlayer 2");
+        int player1 = player == 1 ? 1 : 2;
+        int player2 = player1 == 1 ? 2 : 1;
+        System.Console.WriteLine(player);
+        System.Console.WriteLine($"\tPlayer {player1}\t\t\t\t\tPlayer {player2}");
         System.Console.Write("\t");
         for (int i = 0; i < folder_x.Length; i++)
         {
@@ -84,7 +87,7 @@ class Program
                 while(stop == 0)
                 {
                     bool HaveARange = true;
-                    if((folder.GetLength(0) + 1 - (start_building + core)) < 0) HaveARange = false;
+                    if((folder.GetLength(0) - (start_building + core)) <= 0) HaveARange = false;
 
                     for (int build = start_building; build < start_building + core; build++)
                     {
@@ -100,6 +103,7 @@ class Program
                             build_position = int.Parse(Console.ReadLine()) - 1;
                             System.Console.Write("Столбец | : ");
                             start_building = int.Parse(Console.ReadLine()) - 1;
+                            continue;
                         }
                         else
                         {
@@ -115,7 +119,7 @@ class Program
                 while(stop == 0)
                 {
                     bool HaveARange = true;
-                    if((folder.GetLength(0) + 1 - (start_building + core)) < 0) HaveARange = false;
+                    if((folder.GetLength(0) - (start_building + core)) <= 0) HaveARange = false;
 
                     for (int build = start_building; build < start_building + core; build++)
                     {
@@ -131,6 +135,7 @@ class Program
                             build_position = int.Parse(Console.ReadLine()) - 1;
                             System.Console.Write("Строка - : ");
                             start_building = int.Parse(Console.ReadLine()) - 1;
+                            continue;
                         }
                         else
                         {
@@ -194,20 +199,19 @@ class Program
         return res;
     }
 
-    static void InterpritatorForPlayer(int[,] folder_enemy,string folder_y,int[] folder_x, int[,] folder)
+    static void InterpritatorForPlayer(int[,] folder_enemy,string folder_y,int[] folder_x, int[,] folder,int player)
     {
         string[,] folder_play = new string[10,10];
         for (int i = 0; i < folder_play.GetLength(0); i++)
         {
             for (int k = 0; k < folder_play.GetLength(1); k++)
             {
-                if ( folder[i,k] == 1 ) folder_play[i,k] = "#";
                 if ( folder[i,k] == 3 ) folder_play[i,k] = "X";
-                if ( folder[i,k] == 4 ) folder_play[i,k] = "@";
-                if ( folder[i,k] == 0 || folder[i,k] == 2) folder_play[i,k] = "O";
+                else if ( folder[i,k] == 4 ) folder_play[i,k] = "@";
+                else folder_play[i,k] = "O";
             }
         }
-        interFace(folder_enemy, folder_y, folder_x,folder_play);
+        interFace(folder_enemy, folder_y, folder_x,folder_play,player);
     }
     static Tuple<int[][][], int[,], string[]> LaunchCores(int[][][] cores_array,
                             int[,] folder, string[] cores_orient,
@@ -310,17 +314,19 @@ class Program
                     break;
                 }
             }
-            if (cores_sum == 2) break;
+            if (cores_sum == 10) break; // Ограничитель
         }
         var res = Tuple.Create(cores_array, folder, cores_orient);
         return res;
     }
-    static int[,] AnotherPlayer( int[,] folder_enemy, int[][][] cores_array,string[] cores_orient, int[] folder_x, string folder_y, int[,] folder)
+    static Tuple<int[,], bool> AnotherPlayer( int[,] folder_enemy, int[][][] cores_array,string[] cores_orient, int[] folder_x, string folder_y, int[,] folder,int player)
     {
         bool next = true;
+        bool win = false;
+
         while(next)
         {
-            InterpritatorForPlayer(folder_enemy,folder_y,folder_x,folder);
+            InterpritatorForPlayer(folder_enemy,folder_y,folder_x,folder,player);
             System.Console.Write("Ваш ход: ");
             string msg = Console.ReadLine();
 
@@ -331,7 +337,7 @@ class Program
             {
                 log[i] = int.Parse(msg_[i]) - 1;
             }
-            System.Console.WriteLine($"{log[0]} - {log[1]}");
+            //System.Console.WriteLine($"{log[0]} - {log[1]}");
 
             bool event_0 = false;
             bool event_1 = false;
@@ -378,7 +384,8 @@ class Program
                 System.Console.WriteLine("Таких координат нет");
                 continue;
             }
-            for (int i = 0; i < cores_array.Length; i++)
+
+            for (int i = 0, cores_break = 0; i < cores_array.Length; i++)
             {
                 for (int k = 0, core_size = 0; k < cores_array[i].Length; k++)
                 {
@@ -389,14 +396,23 @@ class Program
                     if(core_size == cores_array[i].Length)
                     {
                         folder = build_core(folder,cores_array[i],cores_orient[i], 3, 4);
+                        cores_break++;
+                        if(cores_break == cores_array.Length)
+                        {
+                            win = true;
+                            next = false;
+                            InterpritatorForPlayer(folder_enemy,folder_y,folder_x,folder,player);
+                        }
                     }
                 }
             }
+
             //InterpritatorForPlayer(folder1,folder_y,folder_x);
             Console.ReadLine();
         }
         System.Console.WriteLine("Ваш ход окончен");
-        return folder;
+        var res = Tuple.Create(folder, win);
+        return res;
     }
     static void Main(string[] args)
     {
@@ -408,11 +424,11 @@ class Program
 
          //переместить в инициализатор
 
-        string[] cores_orient_p1 = new string[2]; 
-        int[][][] cores_array_p1 = new int[2][][];  //[корабль][количество координат][сами координаты(их там 2(Y,X))]
+        string[] cores_orient_p1 = new string[10]; 
+        int[][][] cores_array_p1 = new int[10][][];  //[корабль][количество координат][сами координаты(их там 2(Y,X))]
                                               
-        string[] cores_orient_p2 = new string[2];   //Числа в них - ограничитель, также cores_sum - ограничитель
-        int[][][] cores_array_p2 = new int[2][][];  //[корабль][количество координат][сами координаты(их там 2(Y,X))]
+        string[] cores_orient_p2 = new string[10];   //Числа в них - ограничитель, также cores_sum - ограничитель
+        int[][][] cores_array_p2 = new int[10][][];  //[корабль][количество координат][сами координаты(их там 2(Y,X))]
 
         int player = 1;
         int launch = 0;
@@ -429,9 +445,9 @@ class Program
             if(launch < 2)
             {
                 interFace(P1,folder_y,folder_x,P2,player);
-                var trew = LaunchCores(new int[2][][],P1,new string[2],folder_x,folder_y,P2,player); //Ограничитель
+                var trew = LaunchCores(new int[10][][],P1,new string[10],folder_x,folder_y,P2,player); //Ограничитель
 
-                if(launch < 1)
+                if(launch == 1)
                 {
                     cores_array_p1 = trew.Item1;
                     cores_orient_p1 = trew.Item3;
@@ -446,20 +462,19 @@ class Program
 
                 launch++;
                 player = player == 1 ? 2 : 1;
-                for (int i = 0; i < cores_array_p1.Length; i++)
-                {
-                    System.Console.WriteLine(cores_array_p1[i][0][0] + " " + cores_array_p1[i][0][1] + " " + cores_array_p1[i]);
-                    try
-                    {
-                        System.Console.WriteLine(cores_array_p2[i][0][0] + " " + cores_array_p2[i][0][1] + " " + cores_orient_p2[i]);
-                    }
-                    catch (System.NullReferenceException)
-                    {}
-                }
+                
                 continue;
             }
 
-            P1 = AnotherPlayer(P1, cores_array_player, cores_orient_player, folder_x, folder_y,P2);
+            var AnotherPl = AnotherPlayer(P1, cores_array_player, cores_orient_player, folder_x, folder_y,P2,player);
+            P1 = AnotherPl.Item1;
+
+            if(AnotherPl.Item2)
+            {
+                System.Console.WriteLine($"Побеждает игрок {player}");
+                break;
+            }
+
             player = player == 1 ? 2 : 1;
             continue;
         }
