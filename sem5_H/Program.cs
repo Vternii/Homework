@@ -12,68 +12,8 @@
             }
             return res;
         }
-        static void sum_NegAndPos(ref int sumNegative, ref int sumPositive,in int[] array)
-        {
-            for (int i = 0; i < array.Length; i++)
-            {
-                if(array[i] > 0) sumPositive += array[i];
-                else sumNegative += array[i];
-            }
-        }
-        static void Change_Vals_In_Array(ref int[] array)
-        {
-            for (int i = 0; i < array.Length; i++)
-            {
-                array[i] *= -1;
-            }
-        }
-        static string SearchElement(in int element, in int[] array)
-        {
-            for (int i = 0; i < array.Length; i++)
-            {
-                if(array[i] == element) return "Да";
-            }
-            return null;
-        }
-        static int[] ProductOfNums(in int[] array)
-        {
-            int stoper = array.Length % 2 == 0 ? array.Length / 2 : array.Length / 2 + 1;
-            int[] res_array = new int[stoper];
-
-            for (int i = 0, end = array.Length - 1; i < stoper; i++,end--)
-            {
-                if(i == end) res_array[i] = array[i];
-                else res_array[i] = array[i] * array[end];
-            }
-            return res_array;
-        }
         static void Main(string[] args)
         {
-            int[] array = createArray(13,-9,10);
-
-            int[] array_copy = new int[array.Length];
-            array.CopyTo(array_copy, 0);
-
-            int sum_Negative_nums = 0;
-            int sum_Positive_nums = 0;
-
-            string SearchElem = SearchElement(6, array);
-            SearchElem ??= "Нет";
-
-            sum_NegAndPos(ref sum_Negative_nums, ref sum_Positive_nums, array);
-            Change_Vals_In_Array(ref array_copy);
-            
-            System.Console.WriteLine(string.Join(' ', array));
-            System.Console.WriteLine(string.Join(' ', array_copy));
-
-            System.Console.WriteLine($"Сумма положительных - {sum_Positive_nums}\nСумма отрицательных - {sum_Negative_nums}");
-            System.Console.WriteLine($"{SearchElem}");
-
-            int[] ProductOfNum = ProductOfNums(array);
-
-            System.Console.WriteLine(string.Join(' ', ProductOfNum));
-
-
             System.Console.WriteLine("Задача 34");
             while(true)
             {
@@ -132,8 +72,9 @@
             System.Console.WriteLine("Задача 38");
             while(true)
             {
-                int[] array_38 = createArray(10,0,10);
+                int[] array_38 = createArray(10,0,100);
 
+                //Чё изобретать велосипед)
                 System.Console.WriteLine($"Разница макс и мин - {array_38.Max() - array_38.Min()}");
 
                 System.Console.WriteLine("Продолжим? (выход - q) ");
