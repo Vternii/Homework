@@ -4,71 +4,13 @@ namespace sem_6
 {
     class Program
     {
-        static string BinaryTransform(in int x)
-        {
-            if(x / 2 == 0) return $"{x % 2}";
-            return BinaryTransform(x / 2) + $"{x % 2}";
-        }
-
-        static bool TryTriangle(int a, int b, int c)
-        {
-            bool res = true;
-            if(a > b + c) res = false;
-            else if(b > a + c) res = false;
-            else if(c > b + a) res = false;
-            return res;
-        }
-
-        static int[] FibNums(int N)
-        {
-            int[] res = new int[N];
-            res[0] = 0;
-            res[1] = 1;
-            for (int i = 2; i < res.Length; i++)
-            {
-                res[i] = res[i-1] + res[i-2];
-            }
-            return res;
-        }
-
-        static int[] CopyArray(in int[] original)
-        {
-            int[] res = new int[original.Length];
-
-            for (int i = 0; i < original.Length; i++)
-            {
-                res[i] = original[i];
-            }
-
-            return res;
-        }
-
         static void Main(string[] args)
         {
-            System.Console.WriteLine(BinaryTransform(255));
-            if (TryTriangle(7,4,3))
-            {
-                System.Console.WriteLine("Такой треугольник возможен");
-            }
-            else
-            {
-                System.Console.WriteLine("Такой треугольник невозможен");
-            }
-
-            int[] fib = FibNums(7);
-            System.Console.WriteLine($"[{string.Join(' ', fib)}]");
-
-            int[] fib_copy = CopyArray(fib);
-            fib_copy[0] = 123;
-
-            System.Console.WriteLine($"[{string.Join(' ', fib)}]");
-            System.Console.WriteLine($"[{string.Join(' ', fib_copy)}]");
-
             Console.Clear();
             System.Console.WriteLine("Задача 41");
 
             int count = 0;
-            while(false)
+            while(true)
             {
                 System.Console.Write("Введите число или 'stop': ");
                 string message = Console.ReadLine();
@@ -88,6 +30,8 @@ namespace sem_6
                 }
                 else System.Console.WriteLine("Неверный формат числа");
             }
+            System.Console.Write("Продолжим? ");
+            Console.ReadLine();
 
             Console.Clear();
             System.Console.WriteLine("Задача 43");
@@ -136,9 +80,9 @@ namespace sem_6
             {
                 try
                 {
-                    double? x = (double?)((perems[3] - perems[1]) / (perems[0] - perems[2]));
+                    double? x = ((double?)(perems[3] - perems[1]) / (double?)(perems[0] - perems[2]));
                     double? y = perems[0] * x + perems[1];
-                    System.Console.WriteLine($"Точка пересечения - ({x}, {y})");
+                    System.Console.WriteLine($"Точка пересечения - ({x:f2}, {y:f2})");
                 }
                 catch (System.DivideByZeroException)
                 {
