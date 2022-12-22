@@ -1,52 +1,61 @@
 ﻿using System;
-
+using System.Linq;
 
 namespace Seminar7
 {
+ 
     class Program
     {
-        static void TransformArray_1(int[,] array)
+        static Random random = new Random();
+        static double[,] CreateArray2D(in int rows, in int cols, in int randMin = 0, in int randMax = 10)
+        {
+            double[,] res = new double[rows,cols];
+            for (int i = 0; i < res.GetLength(0); i++)
+            {
+                for (int k = 0; k < res.GetLength(1); k++)
+                {
+                    res[i,k] = random.NextDouble() * random.Next(randMin, randMax);
+                }
+            }
+            return res;
+        }
+        static void FindElement(in double[,] array,in int indexRow,in int indexCol)
+        {
+            if(indexRow >= array.GetLength(0) || indexRow < 0 || indexCol >= array.GetLength(1) || indexCol < 0)
+            {
+                System.Console.WriteLine($"Элемента с индексом [{indexRow}, {indexCol}] не существует");
+            }
+            else
+            {
+                System.Console.WriteLine($"Элемент с индексом [{indexRow}, {indexCol}] = {array[indexRow, indexCol]}");
+            }
+        }
+        static double[] AverageValueToCols(in double[,] array)
+        {
+            double[] res = new double[array.GetLength(1)];
+            for(int i = 0; i < array.GetLength(1); i++)
+            {
+                double[] intermediate = new double[array.GetLength(0)];
+                for (int k = 0; k < array.GetLength(0); k++)
+                {
+                    intermediate[k] = array[k,i];
+                }
+                res[i] = intermediate.Average();
+            }
+            return res;
+        }
+        static void PrintArray(in double[,] array)
         {
             for (int i = 0; i < array.GetLength(0); i++)
             {
                 for (int j = 0; j < array.GetLength(1); j++)
                 {
-                    array[i,j] = i + j;
-                }
-            }
-        }
-
-        static void TransformArray_2(int[,] array)
-        {
-            for (int i = 0; i < array.GetLength(0); i += 2)
-            {
-                for (int j = 0; j < array.GetLength(1); j += 2)
-                {
-                    array[i,j] = (int)Math.Pow(array[i,j],2);
-                }
-            }
-        }
-
-//         Задача 49: Задайте двумерный массив. Найдите элементы, у которых оба индекса чётные, и замените эти элементы на их квадраты.
-// ​        (в примере подсчет индексов начинается с 1 , как в математике)
-//          Например, изначально массив
-//          выглядел вот так:
-// 1 4 7 2
-// 5 9 2 3
-// 8 4 2 4
-
-        static void PrintArray(in int[,] array)
-        {
-            for (int i = 0; i < array.GetLength(0); i++)
-            {
-                for (int j = 0; j < array.GetLength(1); j++)
-                {
-                    System.Console.Write($"{array[i,j]} ");
+                    System.Console.Write($"{array[i,j]:N3}\t");
                 }
                 System.Console.WriteLine();
             }
         }
-        static int[][] PascalTriangle(in int row = 2)
+        static int[][] PascalTriangle(in int row)
         {
             int[][] res = new int[row][];
 
@@ -70,17 +79,20 @@ namespace Seminar7
         
         static void Main(string[] args)
         {
-            int[,] myArray = new int[4,4];
-            
-            TransformArray_1(myArray);
-            PrintArray(myArray);
+            double[,] array = CreateArray2D(4,7,-2,10);
+            PrintArray(array);
+            System.Console.WriteLine("Средние по колонкам:");
+
+            double[] average = AverageValueToCols(array);
+            for (int i = 0; i < average.Length; i++)
+            {
+                System.Console.Write($"{average[i]:N3}\t");
+            }
 
             System.Console.WriteLine();
+            FindElement(array, 0,3);
 
-            TransformArray_2(myArray);
-            PrintArray(myArray);
-
-            int myRow = 20; // How many strings in PascalTriangle?
+            int myRow = 10; // How many strings in PascalTriangle?
             int[][] Triangle = PascalTriangle(myRow);
 
             string[] TriangleString = new string[myRow];
