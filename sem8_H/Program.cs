@@ -36,16 +36,18 @@ namespace Seminar8
             }
             return res;
         }
-        static int[,,] CreateMatrix(in int deep,in int rows, in int cols, in int rand_start = 0, in int rand_end = 11)
+        static int[,,] CreateMatrix(in int deep,in int rows, in int cols)
         {
             int[,,] res = new int[deep,rows, cols];
+            int count = 10;
             for (int i = 0; i < res.GetLength(0); i++)
             {
                 for (int j = 0; j < res.GetLength(1); j++)
                 {
                     for (int k = 0; k < res.GetLength(2); k++)
                     {
-                        res[i,j,k] = random.Next(rand_start, rand_end);
+                        res[i,j,k] = count;
+                        count++;
                     }
                 }
             }
@@ -173,7 +175,7 @@ namespace Seminar8
                 }
                 if(sums_rows[indexMaxSumRow] < sums_rows[i]) indexMaxSumRow = i;
             }
-            System.Console.WriteLine($"Максимальная сумма элементов в {indexMaxSumRow + 1} строке");
+            System.Console.WriteLine($"Максимальная сумма элементов в {indexMaxSumRow + 1} строке массива выше^");
 
             //Задание 58 (Это математическое умножение, просто там в примере, я так понял для упрощения эту матрицу перевернули)
             System.Console.WriteLine("Задание 58");
@@ -190,7 +192,7 @@ namespace Seminar8
             // Задание 60
             System.Console.WriteLine("Задание 60");
 
-            int[,,] array3D_ = CreateMatrix(deep: 2, 4,4,0,10);
+            int[,,] array3D_ = CreateMatrix(2,4,4);
             PrintArray(array_3D: array3D_);
 
             for (int i = 0; i < array3D_.GetLength(0); i++)
